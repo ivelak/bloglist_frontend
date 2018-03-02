@@ -13,7 +13,10 @@ class App extends React.Component {
       error: null,
       username: '',
       password: '',
-      user: null
+      user: null,
+      newTitle:'',
+      newAuthor:'',
+      newUrl:''
     }
   }
 
@@ -31,19 +34,19 @@ class App extends React.Component {
 
   logout = (event) => {
     event.preventDefault
-      try {
-        window.localStorage.removeItem('loggedBlogappUser')
+    try {
+      window.localStorage.removeItem('loggedBlogappUser')
       this.setState({ user: null })
       console.log('ulos')
-      } catch(exception) {
-        this.setState({
-          error: 'ei ees ulos päästä',
-        })
-        setTimeout(() => {
-          this.setState({ error: null })
-        }, 5000)
-      }
-    
+    } catch (exception) {
+      this.setState({
+        error: 'ei ees ulos päästä',
+      })
+      setTimeout(() => {
+        this.setState({ error: null })
+      }, 5000)
+    }
+
 
   }
 
@@ -70,6 +73,30 @@ class App extends React.Component {
 
   handleLoginFieldChange = (event) => {
     this.setState({ [event.target.name]: event.target.value })
+  }
+  handleBlogChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
+  addBlog = (event) => {
+    event.preventDefault()
+    const blogObject = {
+      title: this.state.newTitle,
+      author: this.state.newAuthor,
+      url: this.state.newUrl,
+      user: this.state.user._id
+    }
+
+    blogService
+      .create(blogObject)
+      .then(newBlog => {
+        this.setState({
+          blogs: this.state.blogs.concat(newBlog),
+          newAuthor: '',
+          newTitle: '',
+          newUrl:''
+        })
+      })
   }
 
   render() {
@@ -105,12 +132,49 @@ class App extends React.Component {
 
     const blogForm = () => (
       <div>
-        <h2>blogs</h2>
-        {this.state.blogs.map(blog =>
-          <Blog key={blog._id} blog={blog} />
+        <div>
+          <h2>add a new blog</h2>
+          <form onSubmit={this.addBlog}>
+          <div>
+            title
+            <input
+              type="text"
+              name="newTitle"
+              value={this.state.newTitle}
+              onChange={this.handleBlogChange}
+            />
+            </div>
+            <div>
+              author
+            <input
+              type="text"
+              name="newAuthor"
+              value={this.state.newAuthor}
+              onChange={this.handleBlogChange}
+            />
+            </div>
+            <div>
+              url
+            <input
+              type="text"
+              name="newUrl"
+              value={this.state.newUrl}
+              onChange={this.handleBlogChange}
+            />
+            </div>
+            <button>tallenna</button>
+          </form>
+        </div>
+        <div>
+          <h2>blogs</h2>
+          {
+            this.state.blogs.map(blog =>
+              <Blog key={blog._id} blog={blog} />
 
-        )}
-      </div>
+            )
+          }
+        </div >
+      </div >
     )
     return (
       <div>
