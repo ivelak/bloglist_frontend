@@ -1,0 +1,20 @@
+.nega {
+    color: red;
+    background: white;
+    font-size: 20px;
+    border-style: solid;
+    border-color: red; 
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+.posi {
+    color: green;
+    background: white;
+    font-size: 20px;
+    border-style: solid;
+    border-color: green; 
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

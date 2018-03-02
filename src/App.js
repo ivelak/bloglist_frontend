@@ -10,13 +10,14 @@ class App extends React.Component {
     super(props)
     this.state = {
       blogs: [],
-      error: null,
+      message: null,
+      messagetype: null,
       username: '',
       password: '',
       user: null,
-      newTitle:'',
-      newAuthor:'',
-      newUrl:''
+      newTitle: '',
+      newAuthor: '',
+      newUrl: ''
     }
   }
 
@@ -40,10 +41,12 @@ class App extends React.Component {
       console.log('ulos')
     } catch (exception) {
       this.setState({
-        error: 'ei ees ulos päästä',
+        message: 'ei ees ulos päästä',
+        messagetype: 'nega'
+
       })
       setTimeout(() => {
-        this.setState({ error: null })
+        this.setState({ message: null, messagetype: null })
       }, 5000)
     }
 
@@ -63,10 +66,11 @@ class App extends React.Component {
       console.log('sisään')
     } catch (exception) {
       this.setState({
-        error: 'käyttäjätunnus tai salasana virheellinen',
+        message: 'käyttäjätunnus tai salasana virheellinen',
+        messagetype: 'nega'
       })
       setTimeout(() => {
-        this.setState({ error: null })
+        this.setState({ message: null, messagetype: null })
       }, 5000)
     }
   }
@@ -94,9 +98,14 @@ class App extends React.Component {
           blogs: this.state.blogs.concat(newBlog),
           newAuthor: '',
           newTitle: '',
-          newUrl:''
+          newUrl: '',
+          message: 'a new blog ' + newBlog.title + ' by ' + newBlog.author + ' added ',
+          messagetype: 'posi'
         })
       })
+      setTimeout(() => {
+        this.setState({ message: null, messagetype: null })
+      }, 5000)
   }
 
   render() {
@@ -104,6 +113,9 @@ class App extends React.Component {
 
     const loginForm = () => (
       <div>
+
+        <Notification message={this.state.message} type= { this.state.messagetype} />
+
         <h2>Kirjaudu</h2>
 
         <form onSubmit={this.login}>
@@ -132,35 +144,36 @@ class App extends React.Component {
 
     const blogForm = () => (
       <div>
+        <Notification message={this.state.message} type= { this.state.messagetype}/>
         <div>
           <h2>add a new blog</h2>
           <form onSubmit={this.addBlog}>
-          <div>
-            title
+            <div>
+              title
             <input
-              type="text"
-              name="newTitle"
-              value={this.state.newTitle}
-              onChange={this.handleBlogChange}
-            />
+                type="text"
+                name="newTitle"
+                value={this.state.newTitle}
+                onChange={this.handleBlogChange}
+              />
             </div>
             <div>
               author
             <input
-              type="text"
-              name="newAuthor"
-              value={this.state.newAuthor}
-              onChange={this.handleBlogChange}
-            />
+                type="text"
+                name="newAuthor"
+                value={this.state.newAuthor}
+                onChange={this.handleBlogChange}
+              />
             </div>
             <div>
               url
             <input
-              type="text"
-              name="newUrl"
-              value={this.state.newUrl}
-              onChange={this.handleBlogChange}
-            />
+                type="text"
+                name="newUrl"
+                value={this.state.newUrl}
+                onChange={this.handleBlogChange}
+              />
             </div>
             <button>tallenna</button>
           </form>
@@ -180,7 +193,7 @@ class App extends React.Component {
       <div>
         <h2>blogs</h2>
 
-        <Notification message={this.state.error} />
+
 
         {this.state.user === null ?
           loginForm() :
