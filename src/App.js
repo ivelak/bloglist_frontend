@@ -21,6 +21,30 @@ class App extends React.Component {
     blogService.getAll().then(blogs =>
       this.setState({ blogs })
     )
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({ user })
+      blogService.setToken(user.token)
+    }
+  }
+
+  logout = (event) => {
+    event.preventDefault
+      try {
+        window.localStorage.removeItem('loggedBlogappUser')
+      this.setState({ user: null })
+      console.log('ulos')
+      } catch(exception) {
+        this.setState({
+          error: 'ei ees ulos päästä',
+        })
+        setTimeout(() => {
+          this.setState({ error: null })
+        }, 5000)
+      }
+    
+
   }
 
   login = async (event) => {
@@ -30,9 +54,10 @@ class App extends React.Component {
         username: this.state.username,
         password: this.state.password
       })
-
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       this.setState({ username: '', password: '', user })
-      console.log('sisässä', this.state.user.username)
+      console.log('sisään')
     } catch (exception) {
       this.setState({
         error: 'käyttäjätunnus tai salasana virheellinen',
@@ -96,7 +121,7 @@ class App extends React.Component {
         {this.state.user === null ?
           loginForm() :
           <div>
-            <p>{this.state.user.name} logged in</p>
+            <p>{this.state.user.name} logged in <button onClick={this.logout}>ulos</button></p>
             {blogForm()}
           </div>
         }
