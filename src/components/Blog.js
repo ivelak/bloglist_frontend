@@ -10,7 +10,7 @@ const blogStyle = {
 }
 
 
-const Blog = ({ blog, like }) => (
+const Blog = ({ blog, like, remove }) => (
 
   < ShowBlog label={blog.title} >
     <div style={blogStyle}>
@@ -19,6 +19,7 @@ const Blog = ({ blog, like }) => (
         <li>{blog.url}</li>
         <li>likes {blog.likes} <button onClick={like}>like</button></li>
         <li>added by {blog.user.name}</li>
+        <li><button onClick={remove}>delete</button></li>
       </ul>
     </div>
   </ShowBlog >

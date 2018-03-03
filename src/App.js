@@ -110,13 +110,36 @@ class App extends React.Component {
     }, 5000)
   }
 
+  removeBlog = (id) => {
+    const tobeDeleted = this.state.blogs.find(blog => blog._id == id)
+    return () => {
+      if (window.confirm('Poistellaanko ' + tobeDeleted.title + "?")) {
+        blogService
+          .remove(id)
+          .then(deleted => {
+            this.setState({
+              blogs: this.state.blogs.filter(blog => blog._id !== id)
+            })
+          })
+          .catch(error => {
+            this.setState({
+              message: `ei pysty ees poistaan!`,
+              messagetype: 'nega'
+            })
+            setTimeout(() => {
+              this.setState({ message: null, messagetype: null })
+            }, 5000)
+          })
+      }
+    }
+
+  }
+
+
   addLike = (id) => {
     return () => {
-      console.log('addLike', id)
       const blog = this.state.blogs.find(n => n._id === id)
-      console.log('blog', blog._id)
       const changedBlog = { ...blog, likes: blog.likes + 1 }
-      console.log('then', changedBlog._id)
       blogService
         .update(id, changedBlog)
         .then(changedBlog => {
@@ -146,8 +169,6 @@ class App extends React.Component {
   }
 
   render() {
-
-
 
     const loginForm = () => (
       <Togglable buttonLabel="login">
@@ -201,7 +222,7 @@ class App extends React.Component {
           <ul>
             {
               this.sortByLikes().map(blog =>
-                <Blog key={blog._id} blog={blog} like={this.addLike(blog._id)} />
+                <Blog key={blog._id} blog={blog} like={this.addLike(blog._id)} remove={this.removeBlog(blog._id)} />
               )
             }
           </ul>
