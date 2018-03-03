@@ -8,9 +8,11 @@ const blogStyle = {
   borderWidth: 1,
   marginBottom: 5
 }
+const liStyle= {
+  display: "none"
+}
 
-
-const Blog = ({ blog, like, remove }) => (
+const Blog = ({ blog, like, showRemove, remove }) => (
 
   < ShowBlog label={blog.title} >
     <div style={blogStyle}>
@@ -19,7 +21,7 @@ const Blog = ({ blog, like, remove }) => (
         <li>{blog.url}</li>
         <li>likes {blog.likes} <button onClick={like}>like</button></li>
         <li>added by {blog.user.name}</li>
-        <li><button onClick={remove}>delete</button></li>
+        <li style={showRemove}><button onClick={remove}>delete</button></li>
       </ul>
     </div>
   </ShowBlog >

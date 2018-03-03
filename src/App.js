@@ -168,6 +168,20 @@ class App extends React.Component {
     return sortedBlogs
   }
 
+  showRemove = (username) => {
+    let style
+    if (username==this.state.user.username || username == undefined){
+      style = {
+        color: 'blue'
+      }
+    } else {
+      style = {
+        display: "none"
+      }
+    }
+    return style
+  }
+
   render() {
 
     const loginForm = () => (
@@ -222,7 +236,7 @@ class App extends React.Component {
           <ul>
             {
               this.sortByLikes().map(blog =>
-                <Blog key={blog._id} blog={blog} like={this.addLike(blog._id)} remove={this.removeBlog(blog._id)} />
+                <Blog key={blog._id} blog={blog} like={this.addLike(blog._id)} remove={this.removeBlog(blog._id)} showRemove={this.showRemove(blog.user.username)} />
               )
             }
           </ul>
