@@ -3,6 +3,8 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
 
 
 class App extends React.Component {
@@ -112,34 +114,15 @@ class App extends React.Component {
 
 
     const loginForm = () => (
-      <div>
-
-        <Notification message={this.state.message} type= { this.state.messagetype} />
-
-        <h2>Kirjaudu</h2>
-
-        <form onSubmit={this.login}>
-          <div>
-            käyttäjätunnus
-            <input
-              type="text"
-              name="username"
-              value={this.state.username}
-              onChange={this.handleLoginFieldChange}
-            />
-          </div>
-          <div>
-            salasana
-            <input
-              type="password"
-              name="password"
-              value={this.state.password}
-              onChange={this.handleLoginFieldChange}
-            />
-          </div>
-          <button>kirjaudu</button>
-        </form>
-      </div>
+      <Togglable buttonLabel="login">
+      <LoginForm 
+      visible={this.state.visible}
+      username={this.state.username}
+      password={this.state.password}
+      handleChange={this.handleLoginFieldChange}
+      handleSubmit={this.login}
+      />
+      </Togglable>
     )
 
     const blogForm = () => (
@@ -193,7 +176,7 @@ class App extends React.Component {
       <div>
         <h2>blogs</h2>
 
-
+      <Notification message={this.state.message} type= { this.state.messagetype} />
 
         {this.state.user === null ?
           loginForm() :
