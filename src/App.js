@@ -105,29 +105,57 @@ class App extends React.Component {
           messagetype: 'posi'
         })
       })
-      setTimeout(() => {
-        this.setState({ message: null, messagetype: null })
-      }, 5000)
+    setTimeout(() => {
+      this.setState({ message: null, messagetype: null })
+    }, 5000)
+  }
+
+  addLike = (id) => {
+    return () => {
+      console.log('addLike',id)
+      const blog = this.state.blogs.find(n => n._id === id)
+      console.log('blog', blog._id)
+      const changedBlog = { ...blog, likes: blog.likes + 1 }
+      console.log('then', changedBlog._id)
+      blogService
+        .update(id, changedBlog)
+        .then(changedBlog => {
+          this.setState({
+            blogs: this.state.blogs.map(blog => blog._id !== id ? blog : changedBlog)
+          })
+         
+        })
+        .catch(error => {
+          this.setState({
+            message: `blog '${blog.title}' on jotenkin hävinnyt palvelimelta`,
+            messagetype: 'nega',
+            blogs: this.state.blogs.filter(n => n.id !== id)
+          })
+          setTimeout(() => {
+            this.setState({ message: null, messagetype: null })
+          }, 50000)
+        })
+    }
   }
 
   render() {
 
 
+
     const loginForm = () => (
       <Togglable buttonLabel="login">
-      <LoginForm 
-      visible={this.state.visible}
-      username={this.state.username}
-      password={this.state.password}
-      handleChange={this.handleLoginFieldChange}
-      handleSubmit={this.login}
-      />
+        <LoginForm
+          visible={this.state.visible}
+          username={this.state.username}
+          password={this.state.password}
+          handleChange={this.handleLoginFieldChange}
+          handleSubmit={this.login}
+        />
       </Togglable>
     )
 
     const blogForm = () => (
       <div>
-        <Notification message={this.state.message} type= { this.state.messagetype}/>
         <div>
           <h2>add a new blog</h2>
           <form onSubmit={this.addBlog}>
@@ -163,12 +191,13 @@ class App extends React.Component {
         </div>
         <div>
           <h2>blogs</h2>
-          {
-            this.state.blogs.map(blog =>
-              <Blog key={blog._id} blog={blog} />
-
-            )
-          }
+          <ul>
+            {
+              this.state.blogs.map(blog =>
+                <Blog key={blog._id} blog={blog} like={this.addLike(blog._id)} />
+              )
+            }
+          </ul>
         </div >
       </div >
     )
@@ -176,13 +205,17 @@ class App extends React.Component {
       <div>
         <h2>blogs</h2>
 
-      <Notification message={this.state.message} type= { this.state.messagetype} />
+        <Notification message={this.state.message} type={this.state.messagetype} />
 
         {this.state.user === null ?
           loginForm() :
           <div>
             <p>{this.state.user.name} logged in <button onClick={this.logout}>ulos</button></p>
-            {blogForm()}
+
+
+            <div>
+              {blogForm()}
+            </div>
           </div>
         }
       </div>

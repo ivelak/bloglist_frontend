@@ -1,8 +1,28 @@
 import React from 'react'
-const Blog = ({blog}) => (
-  <div>
-    {blog.title} {blog.author}
-  </div>  
+import ShowBlog from './ShowBlog'
+
+const blogStyle = {
+  paddingTop: 10,
+  paddingLeft: 2,
+  border: 'solid',
+  borderWidth: 1,
+  marginBottom: 5
+}
+
+
+const Blog = ({ blog, like }) => (
+
+  < ShowBlog label={blog.title} >
+    <div style={blogStyle}>
+      <ul>
+        <li>{blog.author}</li>
+        <li>{blog.url}</li>
+        <li>likes {blog.likes} <button onClick={like}>like</button></li>
+        <li>added by {blog.user.name}</li>
+      </ul>
+    </div>
+  </ShowBlog >
 )
 
 export default Blog
+
