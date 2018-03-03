@@ -112,7 +112,7 @@ class App extends React.Component {
 
   addLike = (id) => {
     return () => {
-      console.log('addLike',id)
+      console.log('addLike', id)
       const blog = this.state.blogs.find(n => n._id === id)
       console.log('blog', blog._id)
       const changedBlog = { ...blog, likes: blog.likes + 1 }
@@ -123,7 +123,7 @@ class App extends React.Component {
           this.setState({
             blogs: this.state.blogs.map(blog => blog._id !== id ? blog : changedBlog)
           })
-         
+
         })
         .catch(error => {
           this.setState({
@@ -136,6 +136,13 @@ class App extends React.Component {
           }, 50000)
         })
     }
+  }
+  sortByLikes = () => {
+    console.log('käydäänkö')
+    const sortedBlogs = this.state.blogs.sort(function (a, b) {
+      return b.likes - a.likes
+    })
+    return sortedBlogs
   }
 
   render() {
@@ -193,7 +200,7 @@ class App extends React.Component {
           <h2>blogs</h2>
           <ul>
             {
-              this.state.blogs.map(blog =>
+              this.sortByLikes().map(blog =>
                 <Blog key={blog._id} blog={blog} like={this.addLike(blog._id)} />
               )
             }
